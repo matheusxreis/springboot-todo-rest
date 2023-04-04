@@ -54,5 +54,16 @@ public class TaskController {
        });
     }
 
+    @DeleteMapping()
+    public void removeAll(){
+        repo.deleteAll();
+    }
+
+    @DeleteMapping("{id}")
+    public void removeById(
+            @PathVariable(value="id") long id
+    ){
+        repo.deleteById(id);
+    }
 
 }
