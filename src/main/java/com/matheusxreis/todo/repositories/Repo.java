@@ -9,10 +9,13 @@ import org.springframework.stereotype.Service;
 public class Repo {
 
     public TaskRepository task;
+    public UserRepository user;
     @Autowired
     Repo(
-        TaskRepository task
+        TaskRepository task,
+        UserRepository user
     ){
         this.task = task;
+        this.user = user;
     }
 }
