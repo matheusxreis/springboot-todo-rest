@@ -4,6 +4,7 @@ package com.matheusxreis.todo.controllers;
 import com.matheusxreis.todo.dtos.SaveTaskDTO;
 import com.matheusxreis.todo.models.Task;
 import com.matheusxreis.todo.repositories.TaskRepository;
+import com.matheusxreis.todo.services.TaskService;
 import org.hibernate.mapping.Any;
 import org.hibernate.validator.internal.util.logging.Log;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,17 +21,22 @@ import java.util.logging.Logger;
 @RequestMapping(value="/tasks")
 public class TaskController {
 
+    TaskService service;
+
     @Autowired
-    TaskRepository repo;
+    TaskController(TaskRepository repo, TaskService service){
+        this.service = service;
+    }
+
 
     @GetMapping()
     public List<Task> listAll(){
-        return repo.findAll();
+        return service.findAll();
     }
 
     @GetMapping("{id}")
     public ResponseEntity<Optional<Task>> getTask(@PathVariable(value="id") long id){
-        Optional<Task> task = repo.findById(id);
+        Optional<Task> task = service.findById(id);
        if(task.isPresent()){
            return ResponseEntity.ok(task);
        }else {
@@ -42,13 +48,11 @@ public class TaskController {
     public ResponseEntity saveTask(
             @RequestBody
             SaveTaskDTO data
-            ){
+            )
+    {
 
-        Task task = new Task(
-                data.description,
-                data.owner
-        );
-        repo.save(task);
+
+        service.save(data);
         URI uri = URI.create("/task");
         return ResponseEntity.created(uri).build();
     }
@@ -57,13 +61,8 @@ public class TaskController {
     public ResponseEntity mark(
             @PathVariable(value="id") long id
     ){
-       Optional<Task> task = repo.findById(id);
-       task.ifPresent(value -> {
-           value.mark();
-           repo.save(value);
-       });
-
-        if(task.isPresent()){
+       Task task = service.mark(id);
+        if(task != null){
             return ResponseEntity.ok(task);
         }else {
             return ResponseEntity.badRequest().build();
@@ -72,7 +71,7 @@ public class TaskController {
 
     @DeleteMapping()
     public void removeAll(){
-        repo.deleteAll();
+        service.deleteAll();
 
     }
 
@@ -80,7 +79,7 @@ public class TaskController {
     public void removeById(
             @PathVariable(value="id") long id
     ){
-        repo.deleteById(id);
+        service.delete(id);
     }
 
 }
