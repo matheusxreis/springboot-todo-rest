@@ -5,6 +5,7 @@ import com.matheusxreis.todo.dtos.SaveTaskDTO;
 import com.matheusxreis.todo.models.Task;
 import com.matheusxreis.todo.repositories.TaskRepository;
 import com.matheusxreis.todo.services.TaskService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -41,6 +42,7 @@ public class TaskController {
 
     @PostMapping()
     public ResponseEntity saveTask(
+            @Valid
             @RequestBody
             SaveTaskDTO data
             )
