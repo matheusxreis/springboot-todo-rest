@@ -5,17 +5,12 @@ import com.matheusxreis.todo.dtos.SaveTaskDTO;
 import com.matheusxreis.todo.models.Task;
 import com.matheusxreis.todo.repositories.TaskRepository;
 import com.matheusxreis.todo.services.TaskService;
-import org.hibernate.mapping.Any;
-import org.hibernate.validator.internal.util.logging.Log;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Logger;
 
 @RestController
 @RequestMapping(value="/tasks")
