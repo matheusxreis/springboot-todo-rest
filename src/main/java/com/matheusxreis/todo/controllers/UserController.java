@@ -2,11 +2,9 @@ package com.matheusxreis.todo.controllers;
 
 import com.matheusxreis.todo.dtos.RegisterDTO;
 import com.matheusxreis.todo.services.UserService;
+import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value="/u")
@@ -28,5 +26,10 @@ public class UserController {
     @PostMapping("/login")
     public void login(){
 
+    }
+
+    @DeleteMapping("/remove/{id}")
+    public void removeAccount(@PathVariable("id") long id) {
+            this.service.remove(id);
     }
 }

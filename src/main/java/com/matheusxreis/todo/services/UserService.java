@@ -24,4 +24,8 @@ public class UserService {
         User user = new User(username, password);
         this.repo.user.save(user);
     }
+
+    public void remove(long id){
+        this.repo.user.deleteById(id);
+    }
 }
