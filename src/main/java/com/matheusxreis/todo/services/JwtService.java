@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 import java.io.Serializable;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -54,15 +56,15 @@ public class JwtService implements Serializable {
                 .setClaims(claim)
                 .setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis()))
+                .setExpiration(Date.from(ZonedDateTime.now().plusMinutes(60).toInstant()))
                 .signWith(SignatureAlgorithm.HS512, secret)
                 .compact();
 
     }
 
         private long getIdFromToken(String token) throws ExpiredJwtException{
-                String id = retrieveInfo(token).getId();
-                return Long.parseLong(id);
+                String id = retrieveInfo(token).getSubject();
+                return Long.parseLong(String.format("%s",id));
         };
 
         private boolean isExpired(String token) throws ExpiredJwtException{
