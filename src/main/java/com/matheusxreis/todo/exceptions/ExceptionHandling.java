@@ -2,6 +2,7 @@ package com.matheusxreis.todo.exceptions;
 
 import com.matheusxreis.todo.dtos.ErrorDTO;
 import jakarta.servlet.http.HttpServletRequest;
+import org.apache.tomcat.util.http.parser.HttpParser;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -21,7 +22,7 @@ public class ExceptionHandling {
     ){
        return new ErrorDTO(
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                HttpStatus.INTERNAL_SERVER_ERROR.name(),
+                exception.toString(),
                 exception.getMessage(),
                 req.getServletPath()
         );
@@ -39,5 +40,19 @@ public class ExceptionHandling {
                 exception.getMessage(),
                 req.getServletPath()
         );
+    }
+
+    @ExceptionHandler(value={AuthenticationInvalid.class})
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ErrorDTO handleAuthenticationInvalid(
+            AuthenticationInvalid exception,
+            HttpServletRequest req
+    ){
+        return new ErrorDTO(
+                HttpStatus.UNAUTHORIZED.value(),
+                HttpStatus.UNAUTHORIZED.name(),
+                exception.getMessage(),
+                req.getServletPath()
+                );
     }
 }

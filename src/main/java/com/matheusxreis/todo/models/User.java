@@ -53,4 +53,7 @@ public class User {
         return registeredAt;
     }
 
+    public String revealPassword() {
+        return password;
+    }
 }

@@ -1,9 +1,12 @@
 package com.matheusxreis.todo.controllers;
 
+import com.matheusxreis.todo.dtos.LoginDTO;
+import com.matheusxreis.todo.dtos.LoginResponseDTO;
 import com.matheusxreis.todo.dtos.RegisterDTO;
+import com.matheusxreis.todo.exceptions.AuthenticationInvalid;
 import com.matheusxreis.todo.services.UserService;
-import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -24,8 +27,13 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public void login(){
+    public ResponseEntity<LoginResponseDTO> login(
+            @RequestBody
+            LoginDTO loginDTO
+    ) throws AuthenticationInvalid {
 
+        LoginResponseDTO response = this.service.login(loginDTO);
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/remove/{id}")
