@@ -54,8 +54,7 @@ public class TaskController {
             @Valid
             @RequestBody
             SaveTaskDTO data
-            )
-    {
+            ) throws Exception {
 
 
         service.save(data);

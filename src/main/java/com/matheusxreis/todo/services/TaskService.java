@@ -3,6 +3,7 @@ package com.matheusxreis.todo.services;
 
 import com.matheusxreis.todo.dtos.SaveTaskDTO;
 import com.matheusxreis.todo.models.Task;
+import com.matheusxreis.todo.models.User;
 import com.matheusxreis.todo.repositories.Repo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,9 +28,13 @@ public class TaskService {
         return repo.task.findAll();
     }
 
-    public Task save(SaveTaskDTO dto) {
-       Task task = new Task(dto.description, dto.owner);
-       return repo.task.save(task);
+    public Task save(SaveTaskDTO dto) throws Exception {
+        User user = repo.user.findByUsername(dto.owner);
+        if(user!=null) {
+            Task task = new Task(dto.description, user);
+            return repo.task.save(task);
+        }
+        throw new Exception();
     }
 
     public Task mark(long id){
