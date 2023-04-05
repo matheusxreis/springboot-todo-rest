@@ -20,7 +20,7 @@ public class TaskController {
     TaskService service;
 
     @Autowired
-    TaskController(TaskRepository repo, TaskService service){
+    TaskController(TaskService service){
         this.service = service;
     }
 
