@@ -47,6 +47,11 @@ public class Task {
     public Timestamp getDoneAt() {
         return doneAt;
     }
+
+    public void setDoneAt(Timestamp doneAt) {
+        this.doneAt = doneAt;
+    }
+
     public void mark(){
         this.done = !this.done;
     }

@@ -7,6 +7,7 @@ import com.matheusxreis.todo.repositories.Repo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,6 +35,9 @@ public class TaskService {
     public Task mark(long id){
         Optional<Task> task = this.findById(id);
         task.ifPresent(value -> {
+            if(!value.getDone()){
+                value.setDoneAt(new Timestamp(System.currentTimeMillis()));
+            }
             value.mark();
             repo.task.save(value);
         });
