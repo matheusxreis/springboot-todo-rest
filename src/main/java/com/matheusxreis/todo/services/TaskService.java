@@ -46,4 +46,11 @@ public class TaskService {
     public void delete(long id){
         repo.task.deleteById(id);
     }
+
+    public List<Task> getAllDone(){
+        return repo.task.findByDone(true);
+    };
+    public List<Task> getAllNotDone(){
+        return repo.task.findByDone(false);
+    }
 }

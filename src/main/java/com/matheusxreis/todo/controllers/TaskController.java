@@ -40,6 +40,15 @@ public class TaskController {
        }
     }
 
+    @GetMapping("/done")
+    public ResponseEntity<List<Task>> getAllDone() {
+        return ResponseEntity.ok(service.getAllDone());
+    }
+    @GetMapping("/not/done")
+    public ResponseEntity<List<Task>> getAllNotDone() {
+        return ResponseEntity.ok(service.getAllNotDone());
+    }
+
     @PostMapping()
     public ResponseEntity saveTask(
             @Valid
