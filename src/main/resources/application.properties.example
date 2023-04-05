@@ -1,0 +1,13 @@
+### DATABASE
+
+spring.datasource.url=
+spring.datasource.username=
+spring.datasource.password=
+spring.jpa.hibernate.ddl-auto=update
+
+### SPRING INCLUDE MESSAGE ERROR
+server.error.include-message=always
+
+### JWT SECRET
+
+jwt.secret=
