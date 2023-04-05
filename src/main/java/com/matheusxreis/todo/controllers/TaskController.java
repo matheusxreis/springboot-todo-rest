@@ -2,6 +2,7 @@ package com.matheusxreis.todo.controllers;
 
 
 import com.matheusxreis.todo.dtos.SaveTaskDTO;
+import com.matheusxreis.todo.exceptions.DataNotFound;
 import com.matheusxreis.todo.models.Task;
 import com.matheusxreis.todo.repositories.TaskRepository;
 import com.matheusxreis.todo.services.TaskService;
@@ -9,6 +10,8 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.xml.crypto.Data;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
@@ -54,7 +57,7 @@ public class TaskController {
             @Valid
             @RequestBody
             SaveTaskDTO data
-            ) throws Exception {
+            ) throws DataNotFound {
 
 
         service.save(data);

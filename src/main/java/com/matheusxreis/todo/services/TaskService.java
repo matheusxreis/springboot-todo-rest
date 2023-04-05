@@ -2,12 +2,14 @@ package com.matheusxreis.todo.services;
 
 
 import com.matheusxreis.todo.dtos.SaveTaskDTO;
+import com.matheusxreis.todo.exceptions.DataNotFound;
 import com.matheusxreis.todo.models.Task;
 import com.matheusxreis.todo.models.User;
 import com.matheusxreis.todo.repositories.Repo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.xml.crypto.Data;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
@@ -28,13 +30,14 @@ public class TaskService {
         return repo.task.findAll();
     }
 
-    public Task save(SaveTaskDTO dto) throws Exception {
+    public Task save(SaveTaskDTO dto) throws DataNotFound {
         User user = repo.user.findByUsername(dto.owner);
         if(user!=null) {
             Task task = new Task(dto.description, user);
             return repo.task.save(task);
+        }else {
+            throw new DataNotFound("User");
         }
-        throw new Exception();
     }
 
     public Task mark(long id){
