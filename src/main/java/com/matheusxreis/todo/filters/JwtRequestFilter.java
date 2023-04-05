@@ -36,14 +36,13 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                    "User not authorized to access this route.");
         }
 
-        response.getWriter().write(authorization.toString());
         DecodeReturnJwt value =this.jwtService.decode(authorization);
         if(value.isExpired){
             response.sendError(HttpStatus.UNAUTHORIZED.value(),
                     "User not authorized to access this route.");
         }
         req.setAttribute("userId", value.userId);
-        filterChain.doFilter(req, response);
+       filterChain.doFilter(req, response);
     }
 
 
