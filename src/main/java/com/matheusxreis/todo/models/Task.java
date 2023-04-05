@@ -10,7 +10,7 @@ import java.sql.Timestamp;
 @Table(name="task")
 public class Task {
 
-    public Task(String description, String owner){
+    public Task(String description, User owner){
         this.description = description;
         this.owner = owner;
     }
@@ -20,7 +20,18 @@ public class Task {
     private long id;
     private String description;
     private Boolean done = false;
-    private String owner;
+    @OneToOne()
+    @JoinTable(name="users_tasks",
+            inverseJoinColumns = @JoinColumn(
+                    name="user_id",
+                    referencedColumnName = "id"
+            ),
+            joinColumns = @JoinColumn(
+                    name="task_id",
+                    referencedColumnName = "id"
+            )
+        )
+    private User owner;
     private Timestamp createdAt = new Timestamp(System.currentTimeMillis());
     @Nullable()
     private Timestamp doneAt;
@@ -36,7 +47,7 @@ public class Task {
         return description;
     }
 
-    public String getOwner() {
+    public User getOwner() {
         return owner;
     }
 
