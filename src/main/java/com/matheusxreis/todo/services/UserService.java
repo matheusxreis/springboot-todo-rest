@@ -8,6 +8,7 @@ import com.matheusxreis.todo.models.User;
 import com.matheusxreis.todo.repositories.Repo;
 import com.matheusxreis.todo.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,10 +21,12 @@ public class UserService {
 
     Repo repo;
     PasswordEncoder encoder;
+    JwtService jwtService;
     @Autowired
-    UserService(Repo repo, PasswordEncoder encoder){
+    UserService(Repo repo, PasswordEncoder encoder, JwtService jwtService){
        this.repo = repo;
        this.encoder = encoder;
+       this.jwtService = jwtService;
     }
     public LoginResponseDTO login(LoginDTO dto) throws AuthenticationInvalid {
        User user = this.repo.user.findByUsername(dto.username);
@@ -39,9 +42,10 @@ public class UserService {
            throw new AuthenticationInvalid();
        }
 
+
        return new LoginResponseDTO(
                user,
-               ""
+           jwtService.generate(user)
        );
 
     }
