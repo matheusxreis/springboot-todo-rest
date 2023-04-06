@@ -6,6 +6,7 @@ import com.matheusxreis.todo.dtos.LoginResponseDTO;
 import com.matheusxreis.todo.exceptions.AuthenticationInvalid;
 import com.matheusxreis.todo.exceptions.DataNotFound;
 import com.matheusxreis.todo.exceptions.NotAuthorized;
+import com.matheusxreis.todo.exceptions.UserAlreadyExist;
 import com.matheusxreis.todo.models.User;
 import com.matheusxreis.todo.repositories.Repo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +52,12 @@ public class UserService {
 
     }
 
-    public void register(String username, String password){
+    public void register(String username, String password) throws UserAlreadyExist {
+
+        boolean userAlreadyExist = this.repo.user.findByUsername(username)!=null;
+        if(userAlreadyExist){
+            throw new UserAlreadyExist();
+        }
 
         User user = new User(username,encoder.encode(password));
         this.repo.user.save(user);

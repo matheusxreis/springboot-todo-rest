@@ -7,6 +7,7 @@ import com.matheusxreis.todo.dtos.RegisterDTO;
 import com.matheusxreis.todo.exceptions.AuthenticationInvalid;
 import com.matheusxreis.todo.exceptions.DataNotFound;
 import com.matheusxreis.todo.exceptions.NotAuthorized;
+import com.matheusxreis.todo.exceptions.UserAlreadyExist;
 import com.matheusxreis.todo.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,7 @@ public class UserController {
     public void register(
             @RequestBody
             RegisterDTO registerDTO
-    ){
+    ) throws UserAlreadyExist {
         this.service.register(registerDTO.username, registerDTO.password);
     }
 
