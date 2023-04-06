@@ -1,10 +1,14 @@
 package com.matheusxreis.todo.controllers;
 
+import com.matheusxreis.todo.dtos.DeleteProfileDTO;
 import com.matheusxreis.todo.dtos.LoginDTO;
 import com.matheusxreis.todo.dtos.LoginResponseDTO;
 import com.matheusxreis.todo.dtos.RegisterDTO;
 import com.matheusxreis.todo.exceptions.AuthenticationInvalid;
+import com.matheusxreis.todo.exceptions.DataNotFound;
+import com.matheusxreis.todo.exceptions.NotAuthorized;
 import com.matheusxreis.todo.services.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +21,11 @@ public class UserController {
     @Autowired
     UserController(UserService service){
         this.service = service;
+    }
+
+    private long getUserIdFromReq(HttpServletRequest request
+    ){
+        return Long.parseLong(String.valueOf(request.getAttribute("userId")));
     }
     @PostMapping("/register")
     public void register(
@@ -36,8 +45,9 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/remove/{id}")
-    public void removeAccount(@PathVariable("id") long id) {
-            this.service.remove(id);
+    @DeleteMapping("/remove/account")
+    public void removeAccount(@RequestBody DeleteProfileDTO dto,
+                              HttpServletRequest request) throws NotAuthorized, DataNotFound {
+            this.service.remove(dto, getUserIdFromReq(request));
     }
 }

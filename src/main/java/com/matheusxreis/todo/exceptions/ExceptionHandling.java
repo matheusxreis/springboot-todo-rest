@@ -3,6 +3,7 @@ package com.matheusxreis.todo.exceptions;
 import com.matheusxreis.todo.dtos.ErrorDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.tomcat.util.http.parser.HttpParser;
+import org.aspectj.weaver.ast.Not;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -68,5 +69,19 @@ public class ExceptionHandling {
                 HttpStatus.BAD_REQUEST.name(),
                 "There is no content for you",
                 req.getServletPath());
+    }
+
+    @ExceptionHandler(value={NotAuthorized.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorDTO hanldeNotAuthorized(
+            NotAuthorized exception,
+            HttpServletRequest req
+    ) {
+        return new ErrorDTO(
+                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST.name(),
+                exception.message,
+                req.getServletPath()
+        );
     }
 }
