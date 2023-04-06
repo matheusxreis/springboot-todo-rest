@@ -1,6 +1,7 @@
 package com.matheusxreis.todo.services;
 
 
+import com.matheusxreis.todo.dtos.MarkDesmarkMultipleDTO;
 import com.matheusxreis.todo.dtos.UpdateTaskDescriptionDTO;
 import com.matheusxreis.todo.exceptions.DataNotFound;
 import com.matheusxreis.todo.models.Task;
@@ -9,6 +10,8 @@ import com.matheusxreis.todo.repositories.Repo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -67,6 +70,17 @@ public class TaskService {
             repo.task.save(value);
         });
         return task.get();
+    }
+    public List<Task> multipleMark(MarkDesmarkMultipleDTO dto, long userId) throws DataNotFound {
+        List<Task> tasks = new ArrayList<>();
+        Arrays.stream(dto.ids).forEach(id -> {
+            try {
+                tasks.add(this.mark(id, userId));
+            } catch (DataNotFound e) {
+                throw new RuntimeException(e);
+            }
+        });
+        return tasks;
     }
 
     public Task updateDescription(UpdateTaskDescriptionDTO dto, long id, long userId) throws DataNotFound{

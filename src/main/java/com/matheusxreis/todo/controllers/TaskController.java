@@ -1,6 +1,7 @@
 package com.matheusxreis.todo.controllers;
 
 
+import com.matheusxreis.todo.dtos.MarkDesmarkMultipleDTO;
 import com.matheusxreis.todo.dtos.SaveTaskDTO;
 import com.matheusxreis.todo.dtos.UpdateTaskDescriptionDTO;
 import com.matheusxreis.todo.exceptions.DataNotFound;
@@ -91,6 +92,19 @@ public class TaskController {
             HttpServletRequest request
     ) throws DataNotFound{
        Task task = service.mark(id, getUserIdFromReq(request));
+        if(task != null){
+            return ResponseEntity.ok(task);
+        }else {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PatchMapping("multiple/mark")
+    public ResponseEntity<List<Task>> multipleMark(
+            @RequestBody MarkDesmarkMultipleDTO dto,
+            HttpServletRequest request
+            ) throws DataNotFound {
+        List<Task> task = service.multipleMark(dto, getUserIdFromReq(request));
         if(task != null){
             return ResponseEntity.ok(task);
         }else {
