@@ -100,16 +100,19 @@ public class TaskController {
 
     // DELETING
     @DeleteMapping()
-    public void removeAll(){
-        service.deleteAll();
+    public void removeAll(
+            HttpServletRequest request
+    ) throws DataNotFound {
+        service.deleteAll(getUserIdFromReq(request));
 
     }
 
     @DeleteMapping("{id}")
     public void removeById(
-            @PathVariable(value="id") long id
-    ){
-        service.delete(id);
+            @PathVariable(value="id") long id,
+            HttpServletRequest request
+    ) throws DataNotFound {
+        service.delete(id, getUserIdFromReq(request));
     }
     ////
 

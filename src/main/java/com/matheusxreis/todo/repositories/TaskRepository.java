@@ -2,6 +2,7 @@ package com.matheusxreis.todo.repositories;
 
 import com.matheusxreis.todo.models.Task;
 import com.matheusxreis.todo.models.User;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -13,4 +14,10 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     List<Task> findByOwner(User user);
     Optional<Task> findByIdAndOwner(long id, User user);
     List<Task> findByDoneAndOwner(boolean done, User user);
+
+    @Transactional
+
+    long deleteByIdAndOwner(long id, User user);
+    @Transactional
+    long deleteByOwner(User user);
 }

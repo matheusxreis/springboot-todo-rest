@@ -71,11 +71,11 @@ public class TaskService {
     ///
 
     /// DELETE
-    public void deleteAll(){
-        repo.task.deleteAll();
+    public void deleteAll(long userId) throws DataNotFound {
+        repo.task.deleteByOwner(getUserById(userId));
     }
-    public void delete(long id){
-        repo.task.deleteById(id);
+    public void delete(long id, long userId) throws DataNotFound{
+        repo.task.deleteByIdAndOwner(id, getUserById(userId));
     }
 
     ///
