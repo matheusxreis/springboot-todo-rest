@@ -4,7 +4,6 @@ package com.matheusxreis.todo.controllers;
 import com.matheusxreis.todo.dtos.SaveTaskDTO;
 import com.matheusxreis.todo.exceptions.DataNotFound;
 import com.matheusxreis.todo.models.Task;
-import com.matheusxreis.todo.repositories.TaskRepository;
 import com.matheusxreis.todo.services.TaskService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -12,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.xml.crypto.Data;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
@@ -33,6 +31,7 @@ public class TaskController {
         return Long.parseLong(String.valueOf(request.getAttribute("userId")));
     }
 
+    // GET ROUTES =================
     @GetMapping()
     public List<Task> listAll(
             HttpServletRequest request
@@ -64,6 +63,9 @@ public class TaskController {
         return ResponseEntity.ok(service.getAllNotDone(getUserIdFromReq(request)));
     }
 
+    /// ===============
+
+    // POST ===========
     @PostMapping()
     public ResponseEntity saveTask(
             @Valid
@@ -78,6 +80,9 @@ public class TaskController {
         return ResponseEntity.created(uri).build();
     }
 
+    // ==========
+
+    // UPDATE ===============
     @PatchMapping("{id}")
     public ResponseEntity mark(
             @PathVariable(value="id") long id,
@@ -91,6 +96,9 @@ public class TaskController {
         }
     }
 
+    // ==========
+
+    // DELETING
     @DeleteMapping()
     public void removeAll(){
         service.deleteAll();
@@ -103,5 +111,6 @@ public class TaskController {
     ){
         service.delete(id);
     }
+    ////
 
 }
