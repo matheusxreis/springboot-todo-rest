@@ -6,6 +6,7 @@ import com.matheusxreis.todo.exceptions.DataNotFound;
 import com.matheusxreis.todo.models.Task;
 import com.matheusxreis.todo.repositories.TaskRepository;
 import com.matheusxreis.todo.services.TaskService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,49 +28,62 @@ public class TaskController {
         this.service = service;
     }
 
+    private long getUserIdFromReq(HttpServletRequest request
+    ){
+        return Long.parseLong(String.valueOf(request.getAttribute("userId")));
+    }
 
     @GetMapping()
-    public List<Task> listAll(){
-        return service.findAll();
+    public List<Task> listAll(
+            HttpServletRequest request
+    ) throws DataNotFound {
+        return service.findAll(getUserIdFromReq(request));
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Optional<Task>> getTask(@PathVariable(value="id") long id){
-        Optional<Task> task = service.findById(id);
-       if(task.isPresent()){
-           return ResponseEntity.ok(task);
+    public ResponseEntity<Task> getTask(@PathVariable(value="id") long id,
+                                                  HttpServletRequest request) throws DataNotFound{
+        Optional<Task> task = service.findById(id, getUserIdFromReq(request));
+       if(task!=null){
+           return ResponseEntity.ok(task.get());
        }else {
            return ResponseEntity.badRequest().build();
        }
     }
 
     @GetMapping("/done")
-    public ResponseEntity<List<Task>> getAllDone() {
-        return ResponseEntity.ok(service.getAllDone());
+    public ResponseEntity<List<Task>> getAllDone(
+            HttpServletRequest request
+    ) throws DataNotFound {
+        return ResponseEntity.ok(service.getAllDone(getUserIdFromReq(request)));
     }
     @GetMapping("/not/done")
-    public ResponseEntity<List<Task>> getAllNotDone() {
-        return ResponseEntity.ok(service.getAllNotDone());
+    public ResponseEntity<List<Task>> getAllNotDone(
+            HttpServletRequest request
+    ) throws DataNotFound {
+        return ResponseEntity.ok(service.getAllNotDone(getUserIdFromReq(request)));
     }
 
     @PostMapping()
     public ResponseEntity saveTask(
             @Valid
             @RequestBody
-            SaveTaskDTO data
+            SaveTaskDTO data,
+            HttpServletRequest request
             ) throws DataNotFound {
 
 
-        service.save(data);
+        service.save(data.description, getUserIdFromReq(request));
         URI uri = URI.create("/task");
         return ResponseEntity.created(uri).build();
     }
 
     @PatchMapping("{id}")
     public ResponseEntity mark(
-            @PathVariable(value="id") long id
-    ){
-       Task task = service.mark(id);
+            @PathVariable(value="id") long id,
+            HttpServletRequest request
+    ) throws DataNotFound{
+       Task task = service.mark(id, getUserIdFromReq(request));
         if(task != null){
             return ResponseEntity.ok(task);
         }else {

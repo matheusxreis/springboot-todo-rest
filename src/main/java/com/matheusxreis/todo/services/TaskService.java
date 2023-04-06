@@ -23,25 +23,33 @@ public class TaskService {
         this.repo = repo;
     }
 
-    public Optional<Task> findById(long id) {
-       return repo.task.findById(id);
-    }
-    public List<Task> findAll() {
-        return repo.task.findAll();
-    }
 
-    public Task save(SaveTaskDTO dto) throws DataNotFound {
-        User user = repo.user.findByUsername(dto.owner);
-        if(user!=null) {
-            Task task = new Task(dto.description, user);
-            return repo.task.save(task);
+    public User getUserById(long userId) throws DataNotFound {
+        Optional<User> user = this.repo.user.findById(userId);
+        if(user.isPresent()){
+            return user.get();
         }else {
             throw new DataNotFound("User");
         }
     }
 
-    public Task mark(long id){
-        Optional<Task> task = this.findById(id);
+    public Optional<Task> findById(long id, long userId) throws DataNotFound {
+        return repo.task.findByIdAndOwner(id, getUserById(userId));
+    }
+    public List<Task> findAll(long userId) throws DataNotFound {
+
+            return repo.task.findByOwner(getUserById(userId));
+
+    }
+
+    public Task save(String description, long userId) throws DataNotFound {
+            Task task = new Task(description, getUserById(userId));
+            return repo.task.save(task);
+
+    }
+
+    public Task mark(long id, long userId) throws DataNotFound{
+        Optional<Task> task = this.findById(id, userId);
         task.ifPresent(value -> {
             if(!value.getDone()){
                 value.setDoneAt(new Timestamp(System.currentTimeMillis()));
@@ -51,7 +59,12 @@ public class TaskService {
         });
         return task.get();
     }
-
+    public List<Task> getAllDone(long userId) throws DataNotFound{
+        return repo.task.findByDoneAndOwner(true, getUserById(userId));
+    };
+    public List<Task> getAllNotDone(long userId) throws DataNotFound {
+        return repo.task.findByDoneAndOwner(false, getUserById(userId));
+    }
     public void deleteAll(){
         repo.task.deleteAll();
     }
@@ -59,10 +72,5 @@ public class TaskService {
         repo.task.deleteById(id);
     }
 
-    public List<Task> getAllDone(){
-        return repo.task.findByDone(true);
-    };
-    public List<Task> getAllNotDone(){
-        return repo.task.findByDone(false);
-    }
+
 }

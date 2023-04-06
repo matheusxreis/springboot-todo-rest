@@ -7,5 +7,4 @@ public class SaveTaskDTO {
     @NotNull
     @NotEmpty
     public String description;
-    public String owner;
 }

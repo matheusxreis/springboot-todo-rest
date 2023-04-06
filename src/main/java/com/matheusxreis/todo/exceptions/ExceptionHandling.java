@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import javax.xml.crypto.Data;
+import java.util.NoSuchElementException;
 
 @RestControllerAdvice
 public class ExceptionHandling {
@@ -54,5 +55,18 @@ public class ExceptionHandling {
                 exception.getMessage(),
                 req.getServletPath()
                 );
+    }
+
+    @ExceptionHandler(value={NoSuchElementException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorDTO handleNoSuchElement(
+            NoSuchElementException exception,
+            HttpServletRequest req
+    ){
+        return new ErrorDTO(
+                HttpStatus.BAD_REQUEST.value(),
+                HttpStatus.BAD_REQUEST.name(),
+                "There is no content for you",
+                req.getServletPath());
     }
 }
