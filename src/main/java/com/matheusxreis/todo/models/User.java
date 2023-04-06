@@ -1,8 +1,7 @@
 package com.matheusxreis.todo.models;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import org.springframework.stereotype.Component;
+
 
 import java.sql.Timestamp;
 import java.util.Collection;
@@ -41,6 +40,18 @@ public class User {
             )
     )
     private Collection<Task> tasks;
+    @OneToMany(cascade = CascadeType.REMOVE)
+    @JoinTable(name="user_friends",
+            joinColumns = @JoinColumn(
+                    name="user_id",
+                    referencedColumnName = "id"
+            ),
+            inverseJoinColumns = @JoinColumn(
+                    name="friend_id",
+                    referencedColumnName = "id"
+            )
+    )
+    public Collection<User> friends;
 
     public long getId() {
         return id;
