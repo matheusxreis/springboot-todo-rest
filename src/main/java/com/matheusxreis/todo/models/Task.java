@@ -63,6 +63,10 @@ public class Task {
         this.doneAt = doneAt;
     }
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public void mark(){
         this.done = !this.done;
     }

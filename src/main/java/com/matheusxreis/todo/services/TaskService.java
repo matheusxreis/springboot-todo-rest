@@ -1,6 +1,7 @@
 package com.matheusxreis.todo.services;
 
 
+import com.matheusxreis.todo.dtos.UpdateTaskDescriptionDTO;
 import com.matheusxreis.todo.exceptions.DataNotFound;
 import com.matheusxreis.todo.models.Task;
 import com.matheusxreis.todo.models.User;
@@ -63,6 +64,15 @@ public class TaskService {
                 value.setDoneAt(new Timestamp(System.currentTimeMillis()));
             }
             value.mark();
+            repo.task.save(value);
+        });
+        return task.get();
+    }
+
+    public Task updateDescription(UpdateTaskDescriptionDTO dto, long id, long userId) throws DataNotFound{
+        Optional<Task> task = this.findById(id, userId);
+        task.ifPresent(value -> {
+            value.setDescription(dto.description);
             repo.task.save(value);
         });
         return task.get();

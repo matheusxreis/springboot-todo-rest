@@ -2,11 +2,13 @@ package com.matheusxreis.todo.controllers;
 
 
 import com.matheusxreis.todo.dtos.SaveTaskDTO;
+import com.matheusxreis.todo.dtos.UpdateTaskDescriptionDTO;
 import com.matheusxreis.todo.exceptions.DataNotFound;
 import com.matheusxreis.todo.models.Task;
 import com.matheusxreis.todo.services.TaskService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import org.hibernate.sql.Update;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -96,6 +98,19 @@ public class TaskController {
         }
     }
 
+    @PatchMapping("description/{id}")
+    public ResponseEntity updateDescription(
+            @PathVariable(value="id") long id,
+            @RequestBody UpdateTaskDescriptionDTO dto,
+            HttpServletRequest request
+    ) throws DataNotFound {
+        Task task = service.updateDescription(dto, id, getUserIdFromReq(request));
+        if(task != null){
+            return ResponseEntity.ok(task);
+        }else {
+            return ResponseEntity.badRequest().build();
+        }
+    }
     // ==========
 
     // DELETING
